@@ -35,7 +35,9 @@ function draw() {
   if (count == lifeSpan) {
     count = 0;
     //reset
-    population = new Population();
+    // population = new Population();
+    population.evaluate();
+    population.selection();
   }
 
   ellipse(target.x, target.y, 16, 16);
@@ -55,8 +57,8 @@ function Population() {
     let maxFit = 0;
     for (let i = 0; i < this.popsize; i++) {
       this.rockets[i].calcFitness();
-      if (this.rokects[i].fitness > maxFit) {
-        maxFit = this.rokects[i].fitness;
+      if (this.rockets[i].fitness > maxFit) {
+        maxFit = this.rockets[i].fitness;
       }
     }
     for (let i = 0; i < this.popsize; i++) {
@@ -67,15 +69,20 @@ function Population() {
     for (let i = 0; i < this.popsize; i++) {
       let n = this.rockets[i].fitness * 100;
       for (let j = 0; j < n; j++) {
-        this.matingpool.add(this.rockets[i]);
+        this.matingpool.push(this.rockets[i]);
       }
     }
   }
 
   this.selection = function () {
-    let parentA = random(this.matingpool).dna;
-    let parentB = random(this.matingpool).dna;
-    let child = parentA.crossover(parentB);
+    let newRockets = [];
+    for (let i = 0; i < this.rockets.length; i++) {
+      let parentA = random(this.matingpool).dna;
+      let parentB = random(this.matingpool).dna;
+      let child = parentA.crossover(parentB);
+      newRockets[i] = new Rocket(child);
+    }
+    this.rockets = newRockets;
   }
 
 
@@ -90,42 +97,43 @@ function Population() {
 
 
 function DNA(genes) {
-  if(genes) {
+  if (genes) {
     this.genes = genes;
   } else {
     this.genes = [];
     for (let i = 0; i < lifeSpan; i++) {
       this.genes[i] = p5.Vector.random2D();
-      this.genes[i].setMag(0.3); //speed
+      this.genes[i].setMag(0.7); //speed
+    }
   }
-}
 
   this.crossover = function (partner) {
     let newgenes = [];
-    let mid = floor(random(genes.length));
-    for (let i = 0; i < genes.length; i++) {
+    let mid = floor(random(this.genes.length));
+    for (let i = 0; i < this.genes.length; i++) {
       if (i > mid) {
         newgenes[i] = this.genes[i];
       } else {
-        newgenes[i] = this.partner[i];
+        newgenes[i] = partner.genes[i];
       }
     }
     return new DNA(newgenes);
   }
-
 }
 
 
 
 
-
-
-
-function Rocket() {
+function Rocket(dna) {
   this.pos = createVector(width / 2, height);
   this.vel = createVector();
   this.acc = createVector();
-  this.dna = new DNA();
+
+  if (dna) {
+    this.dna = dna;
+  } else {
+    this.dna = new DNA();
+  }
   this.fitness = 0;
 
   this.applyForce = function (force) {
