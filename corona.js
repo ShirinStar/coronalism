@@ -1,24 +1,35 @@
 class Corona {
   constructor() {
-    this.shapes = []
+    // this.shapes = []
+
   }
 
   render() {
-    let picker = random(1)
-    if (picker > 0.3) {
-      this.shapes.push(new Circles())
-    }
-    picker = random(1)
-    if (picker > 0.3) {
-      this.shapes.push(new DottedLines())
-    }
-    picker = random(1)
-    if (picker > 0.3) {
-      this.shapes.push(new CenteredShape())
-    }
-    this.shapes.forEach(shape => {
-      shape.render()
-    })
+
+    const circles = new Circles()
+    circles.render()
+
+    const dottedLInes = new DottedLines()
+    dottedLInes.render()
+
+    const centeredShape = new CenteredShape()
+    centeredShape.render()
+
+    // let picker = random(1)
+    // if (picker > 0.3) {
+    //   this.shapes.push(new Circles())
+    // }
+    // picker = random(1)
+    // if (picker > 0.3) {
+    //   this.shapes.push(new DottedLines())
+    // }
+    // picker = random(1)
+    // if (picker > 0.3) {
+    //   this.shapes.push(new CenteredShape())
+    // }
+    // this.shapes.forEach(shape => {
+    //   shape.render()
+    // })
   }
 }
 

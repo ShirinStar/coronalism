@@ -4,29 +4,34 @@ let PALLETE = [];
 let corona;
 let rocket;
 let population;
-const lifeSpan = 200;
+const lifeSpan = 400;
 let lifeP;
+// let maxForce = 0.1;
 let count = 0;
 let target;
+let tx = 700;
+let ty = 400;
+let tw = 200;
+let th = 10;
 
 
 function setup() {
   // noLoop()
-  createCanvas(550, 550);
+  createCanvas(windowWidth, windowHeight);
   PALLETE = [
-    color(255, 52, 154), //pink
-    color(4, 0, 152) //blue
+    color(204, 109, 174), //pink
+    color(184, 49, 37) //red
   ]
   angleMode(DEGREES);
 
   rocket = new Rocket();
   population = new Population();
   lifeP = createP();
-  target = createVector(width / 2, 50);
+  target = createVector(width / 2, 200);
 }
 
 function draw() {
-  background(0)
+  background(142, 127,124)
   corona = new Corona();
   population.run();
   lifeP.html(count);
@@ -40,13 +45,21 @@ function draw() {
     population.selection();
   }
 
+  let word = 'CAPITALISM';
+  fill(105, 37, 36);
+  textAlign(CENTER);
+  textStyle(BOLD);
+  textSize(150);
+  text(word, tx, ty, [tw], [th]);
+  //target
+  noStroke();
+  fill(142, 127,124);
   ellipse(target.x, target.y, 16, 16);
-
 }
 
 function Population() {
   this.rockets = [];
-  this.popsize = 25;
+  this.popsize = 50;
   this.matingpool = [];
 
   for (let i = 0; i < this.popsize; i++) {
@@ -80,11 +93,11 @@ function Population() {
       let parentA = random(this.matingpool).dna;
       let parentB = random(this.matingpool).dna;
       let child = parentA.crossover(parentB);
+      child.mutation();
       newRockets[i] = new Rocket(child);
     }
     this.rockets = newRockets;
   }
-
 
   this.run = function () {
     for (let i = 0; i < this.popsize; i++) {
@@ -95,7 +108,6 @@ function Population() {
   }
 }
 
-
 function DNA(genes) {
   if (genes) {
     this.genes = genes;
@@ -103,7 +115,7 @@ function DNA(genes) {
     this.genes = [];
     for (let i = 0; i < lifeSpan; i++) {
       this.genes[i] = p5.Vector.random2D();
-      this.genes[i].setMag(0.7); //speed
+      this.genes[i].setMag(0.4); //speed
     }
   }
 
@@ -119,15 +131,24 @@ function DNA(genes) {
     }
     return new DNA(newgenes);
   }
+
+  this.mutation = function () {
+    for (let i = 0; i < this.genes.length; i++) {
+      if (random(1) < 0.01) {
+        this.genes[i] = p5.Vector.random2D();
+        this.genes[i].setMag(0.3);
+      }
+    }
+  }
 }
-
-
 
 
 function Rocket(dna) {
   this.pos = createVector(width / 2, height);
   this.vel = createVector();
   this.acc = createVector();
+  this.completed = false;
+  this.crashed = false;
 
   if (dna) {
     this.dna = dna;
@@ -143,14 +164,42 @@ function Rocket(dna) {
   this.calcFitness = function () {
     let d = dist(this.pos.x, this.pos.y, target.x, target.y);
     this.fitness = map(d, 0, width, width, 0);
+    if (this.completed) {
+      this.fitness *= 2;
+    }
+    if (this.crashed) {
+      this.fitness /= 10;
+    }
   }
 
   this.update = function () {
-    this.applyForce(this.dna.genes[count]);
+    let d = dist(this.pos.x, this.pos.y, target.x, target.y);
+    if (d < 10) {
+      this.completed = true;
+      this.pos = target.copy();
+    }
 
-    this.vel.add(this.acc);
-    this.pos.add(this.vel);
-    this.acc.mult(0);
+    if (this.pos.x > tx && this.pos.x < tx + tw && this.pos.y > ty && this.pos.y < ty + th) {
+      this.crashed = true;
+    }
+
+    if (this.pos.x > width || this.pos.x < 0) {
+      this.crashed =true;
+    }
+
+    if (this.pos.y > height || this.pos.y < 0) {
+      this.crashed =true;
+    }
+
+
+    this.applyForce(this.dna.genes[count]);
+    //physic position
+    if (!this.completed && !this.crashed) {
+      this.vel.add(this.acc);
+      this.pos.add(this.vel);
+      this.acc.mult(0);
+      this.vel.limit(4);
+    }
   }
 
 
