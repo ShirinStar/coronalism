@@ -9,8 +9,8 @@ let lifeP;
 // let maxForce = 0.1;
 let count = 0;
 let target;
-let tx = 700;
-let ty = 400;
+let tx = 350;
+let ty = 350;
 let tw = 200;
 let th = 10;
 
@@ -44,13 +44,17 @@ function draw() {
     population.evaluate();
     population.selection();
   }
+  // noStroke();
+  // fill(0);
+  // rect(350, ty, 850, 150);
 
   let word = 'CAPITALISM';
   fill(105, 37, 36);
-  textAlign(CENTER);
+  // textAlign(CENTER);
   textStyle(BOLD);
   textSize(150);
   text(word, tx, ty, [tw], [th]);
+  
   //target
   noStroke();
   fill(142, 127,124);
@@ -59,7 +63,7 @@ function draw() {
 
 function Population() {
   this.rockets = [];
-  this.popsize = 50;
+  this.popsize = 100;
   this.matingpool = [];
 
   for (let i = 0; i < this.popsize; i++) {
