@@ -4,22 +4,22 @@ let PALLETE = [];
 let corona;
 let rocket;
 let population;
-const lifeSpan = 400;
+const lifeSpan = 800;
 let lifeP;
 // let maxForce = 0.1;
 let count = 0;
 let target;
-let tx = 350;
-let ty = 350;
-let tw = 200;
-let th = 10;
+const tx = 350;
+const ty = 350;
+const tw = 900;
+const th = 150;
 
 
 function setup() {
   // noLoop()
   createCanvas(windowWidth, windowHeight);
   PALLETE = [
-    color(204, 109, 174), //pink
+    color(167, 55, 131), //pink
     color(184, 49, 37) //red
   ]
   angleMode(DEGREES);
@@ -44,26 +44,28 @@ function draw() {
     population.evaluate();
     population.selection();
   }
-  // noStroke();
-  // fill(0);
-  // rect(350, ty, 850, 150);
+  noStroke();
+  noFill();
+  rect(tx, ty, tw, th);
 
   let word = 'CAPITALISM';
-  fill(105, 37, 36);
+  // fill(105, 37, 36);
+  fill(255);
   // textAlign(CENTER);
+  // stroke(0);
   textStyle(BOLD);
   textSize(150);
   text(word, tx, ty, [tw], [th]);
   
   //target
   noStroke();
-  fill(142, 127,124);
-  ellipse(target.x, target.y, 16, 16);
+  noFill();
+  ellipse(target.x, target.y, 16, 5);
 }
 
 function Population() {
   this.rockets = [];
-  this.popsize = 100;
+  this.popsize = 150;
   this.matingpool = [];
 
   for (let i = 0; i < this.popsize; i++) {
@@ -107,6 +109,18 @@ function Population() {
     for (let i = 0; i < this.popsize; i++) {
       this.rockets[i].update();
       this.rockets[i].show();
+      
+      
+      //for the trail
+        // for (let i =0; i < history.length; i++) {
+        //   let position = history[i];
+        //   console.log(position);
+        //   fill(0);
+        //   ellipse(position.x, position.y, 10, 10);
+           
+        //    this.history.push(this.pos);
+        
+      // }
 
     }
   }
@@ -119,7 +133,7 @@ function DNA(genes) {
     this.genes = [];
     for (let i = 0; i < lifeSpan; i++) {
       this.genes[i] = p5.Vector.random2D();
-      this.genes[i].setMag(0.4); //speed
+      this.genes[i].setMag(0.2); //speed
     }
   }
 
@@ -153,6 +167,7 @@ function Rocket(dna) {
   this.acc = createVector();
   this.completed = false;
   this.crashed = false;
+  this.history = [];
 
   if (dna) {
     this.dna = dna;
@@ -169,10 +184,10 @@ function Rocket(dna) {
     let d = dist(this.pos.x, this.pos.y, target.x, target.y);
     this.fitness = map(d, 0, width, width, 0);
     if (this.completed) {
-      this.fitness *= 2;
+      this.fitness *= 3;
     }
     if (this.crashed) {
-      this.fitness /= 10;
+      this.fitness /= 5;
     }
   }
 
@@ -195,7 +210,6 @@ function Rocket(dna) {
       this.crashed =true;
     }
 
-
     this.applyForce(this.dna.genes[count]);
     //physic position
     if (!this.completed && !this.crashed) {
@@ -215,7 +229,8 @@ function Rocket(dna) {
     // rectMode(CENTER);
     // rect(0, 0, 25, 5);
     pop();
-
+   
+   
   }
 }
 

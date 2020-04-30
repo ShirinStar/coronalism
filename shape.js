@@ -73,3 +73,34 @@ class CenteredShape extends Shape {
     pop()
   }
 }
+
+class SimpleLine extends Shape {
+  constructor() {
+    super()
+    this.numSteps = randomSelectTwo() ? this.stepsOut : int(this.stepsOut * 1.25);
+    this.step = (CRYSTAL_SIZE / 2) / this.numSteps;
+    this.start = floor(random(0, this.numSteps));
+    this.stop = floor(random(this.start, this.numSteps + 1));
+    this.numShapes = randomSelectTwo() ? this.sides : this.sides * 2;
+    this.angle = 360 / this.numShapes;
+
+    if (this.layerColor = 1) {
+      // stroke(127, 158, 175);
+      stroke(0)
+    } else {
+      stroke(this.layerColor)
+    }
+  }
+    
+  render() {
+    noFill();
+    strokeWeight(this.weight);
+    push()
+    //translate(width / 2, height / 2);
+    for (let i = 0; i <= this.numShapes; i++) {
+      line(this.start * this.step, 0, this.stop * this.step, 0)
+      rotate(this.angle);
+    }
+    pop()
+  }
+}

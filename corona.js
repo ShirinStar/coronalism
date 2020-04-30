@@ -15,6 +15,9 @@ class Corona {
     const centeredShape = new CenteredShape()
     centeredShape.render()
 
+    const simpleLine = new SimpleLine()
+    simpleLine.render()
+
     // let picker = random(1)
     // if (picker > 0.3) {
     //   this.shapes.push(new Circles())
