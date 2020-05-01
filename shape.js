@@ -18,7 +18,6 @@ class Circles extends Shape {
     this.shapeSize = (CRYSTAL_SIZE / 2) * 0.93
     this.position = (CRYSTAL_SIZE / 2) - (this.shapeSize / 2)
   }
-
   render() {
     noFill()
     stroke(this.layerColor)
@@ -41,7 +40,6 @@ class DottedLines extends Shape {
     this.shapeSize = 3
     this.centerOffset = this.singleStep
   }
-
   render() {
     fill(this.layerColor)
     noStroke()
@@ -63,7 +61,6 @@ class CenteredShape extends Shape {
     this.randomShape = random(1)
     this.shapeSize = floor(random(this.stepsOut / 2, this.stepsOut - 1)) * this.singleStep
   }
-
   render() {
     fill(this.layerColor)
     noStroke()
@@ -79,22 +76,15 @@ class SimpleLine extends Shape {
     super()
     this.numSteps = randomSelectTwo() ? this.stepsOut : int(this.stepsOut * 1.25);
     this.step = (CRYSTAL_SIZE / 2) / this.numSteps;
-    this.start = floor(random(0, this.numSteps));
-    this.stop = floor(random(this.start, this.numSteps + 1));
-    this.numShapes = randomSelectTwo() ? this.sides : this.sides * 2;
+    this.start = 6
+    this.stop = 12
+    this.numShapes = this.sides * 2;
     this.angle = 360 / this.numShapes;
-
-    if (this.layerColor = 1) {
-      // stroke(127, 158, 175);
-      stroke(0)
-    } else {
-      stroke(this.layerColor)
-    }
   }
-    
   render() {
     noFill();
-    strokeWeight(this.weight);
+    strokeWeight(1);
+    stroke(62, 91, 106)
     push()
     //translate(width / 2, height / 2);
     for (let i = 0; i <= this.numShapes; i++) {

@@ -9,10 +9,10 @@ let lifeP;
 // let maxForce = 0.1;
 let count = 0;
 let target;
-const tx = 350;
+const tx = 500;
 const ty = 350;
-const tw = 900;
-const th = 150;
+const tw = 720;
+const th = 120;
 
 
 function setup() {
@@ -25,10 +25,16 @@ function setup() {
   angleMode(DEGREES);
 
   rocket = new Rocket();
+
   population = new Population();
+  
   lifeP = createP();
   target = createVector(width / 2, 200);
+
+  // let gui_data = new dat.GUI();
+  // gui_data.add(Population, 'popsize', 0, 150);
 }
+
 
 function draw() {
   background(142, 127,124)
@@ -54,7 +60,7 @@ function draw() {
   // textAlign(CENTER);
   // stroke(0);
   textStyle(BOLD);
-  textSize(150);
+  textSize(120);
   text(word, tx, ty, [tw], [th]);
   
   //target
@@ -65,7 +71,7 @@ function draw() {
 
 function Population() {
   this.rockets = [];
-  this.popsize = 150;
+  this.popsize = 100;
   this.matingpool = [];
 
   for (let i = 0; i < this.popsize; i++) {
@@ -109,19 +115,6 @@ function Population() {
     for (let i = 0; i < this.popsize; i++) {
       this.rockets[i].update();
       this.rockets[i].show();
-      
-      
-      //for the trail
-        // for (let i =0; i < history.length; i++) {
-        //   let position = history[i];
-        //   console.log(position);
-        //   fill(0);
-        //   ellipse(position.x, position.y, 10, 10);
-           
-        //    this.history.push(this.pos);
-        
-      // }
-
     }
   }
 }
@@ -218,6 +211,19 @@ function Rocket(dna) {
       this.acc.mult(0);
       this.vel.limit(4);
     }
+
+    //for the trail
+    const objX = this.pos.x;
+    const objY = this.pos.y; 
+    const coord = {
+      x: objX,
+      y: objY
+    }
+    this.history.push(coord);
+    if(this.history.length >15) {
+      this.history.splice( 0, 1)
+    }
+    // console.log(this.history)
   }
 
 
@@ -226,11 +232,17 @@ function Rocket(dna) {
     translate(this.pos.x, this.pos.y);
     rotate(this.vel.heading());
     corona.render()
-    // rectMode(CENTER);
-    // rect(0, 0, 25, 5);
     pop();
-   
-   
+
+    fill(255, 175);
+    beginShape();
+    for (let i = 0; i < this.history.length; i++) {
+      pos = this.history[i];
+      // ellipse(pos.x, pos.y, 3, 3);
+      // console.log(this.history)
+      vertex(pos.x, pos.y);
+    }
+    endShape();
   }
 }
 
